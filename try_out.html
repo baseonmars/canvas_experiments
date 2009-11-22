@@ -17,7 +17,7 @@
 	function getContext() {
 		return getCanvas().getContext('2d');
 	}
-	
+
 	function draw() {  
 		var ctx = getContext();  
 		var img = new Image();  
@@ -26,7 +26,7 @@
 		}  
 		img.src = 'http://farm3.static.flickr.com/2539/4121350181_d4b90bc4da_b.jpg';  
 	}
-	
+
 	function draw2() {
 		var ctx = getContext();
 		var canvas = document.getElementById('mycanvas');
@@ -34,49 +34,96 @@
 		ctx.clearRect(40,40,60,60);
 		ctx.strokeRect(45,45,50,50);
 		ctx.beginPath();    
-	 	ctx.moveTo(70,50);  
+		ctx.moveTo(70,50);  
 		ctx.lineTo(50,90);  
 		ctx.lineTo(90,90);  
 		ctx.fill();  
 
-    
+
 		ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)
 	}     
-	
+
 	function draw3() {
-      var start = new Date().getTime();
-		  var ctx = document.getElementById('mycanvas').getContext('2d');  
-			var N = 256;
-		  var C_SCALE = 255/N;
-			var WIDTH = Math.floor(640/N);
-			var HEIGHT = Math.floor(480/N);
-		  for (var i=0;i<N;i++){  
-		    for (var j=0;j<N;j++){  
-		      ctx.fillStyle = 'rgb(' + Math.floor(C_SCALE*i) + ',' +   
-		                       Math.floor(C_SCALE*j) + ',0)';  
-		      ctx.fillRect(j*WIDTH,i*HEIGHT,WIDTH,HEIGHT);  
-		    }  
-		  }  
-      var finish = new Date().getTime();
-      console.log((finish-start)/1000)		
+		var start = new Date().getTime();
+		var ctx = document.getElementById('mycanvas').getContext('2d');  
+		var N = 256;
+		var C_SCALE = 255/N;
+		var WIDTH = Math.floor(640/N);
+		var HEIGHT = Math.floor(480/N);
+		for (var i=0;i<N;i++){  
+			for (var j=0;j<N;j++){  
+				ctx.fillStyle = 'rgb(' + Math.floor(C_SCALE*i) + ',' +   
+				Math.floor(C_SCALE*j) + ',0)';  
+				ctx.fillRect(j*WIDTH,i*HEIGHT,WIDTH,HEIGHT);  
+			}  
+		}  
+		var finish = new Date().getTime();
+		console.log((finish-start)/1000)		
 	}                 
-	
-	function draw4() {
+
+	function draw4(colorValue) {
 		var c = getContext();
 		var can = getCanvas();
 		var x = can.width;
 		var y = can.height;
 		while ( x > 0 & y > 0 ) {
-			fill = 'rgb('+Math.floor(255*(x/can.width))+','+Math.floor(255*(y/can.width))+',0)';
+			fill = 'rgb('+Math.floor(colorValue*(x/can.width))+','+Math.floor(colorValue*(y/can.width))+',0)';
 			c.fillStyle = fill;
 			c.fillRect(0+(can.width-x)/2,0+(can.height-y)/2,x,y);
 			x -= 20;
 			y -= 20;
 		}
+	}                    
+
+	function draw5() {
+		var c = getContext();
+		var can = getCanvas(); 
+		var color = 1;
+		var inter = setInterval(function() { 
+			c.clearRect(0,0,can.width,can.height); // clear canvas
+			draw4(color);
+			color++;
+			if (color > 256) {
+				console.log('done');
+				clearInterval(inter);   
+			}
+		}, 5);
+	}       
+	
+	function draw6() {
+	 	var ctx = getContext();  
+		var can = getCanvas();
+		var img = new Image();  
+		img.onload = function(){
+			var x = 0;
+			var factor = 1;
+			var scale = 1;
+			var scaleFactor = 0.000008;
+			ctx.save
+			ctx.translate(-500,-500);
+
+			var inter = setInterval(function() {
+  			ctx.clearRect(-100,-100,can.width*3,can.height*3);
+				ctx.save
+				ctx.translate(factor,factor); 
+				ctx.scale(scale,scale);
+				ctx.drawImage(img,0,0,640*2,480*2); 
+				x += factor;           
+				scale += scaleFactor;
+				ctx.restore
+ 				if (x > can.height-100 || x < -100) {
+					factor = factor * -1;
+					scale = 1;                          
+					scaleFactor = scaleFactor * -1;
+				}       
+
+			}, 10 );
+		}  
+		img.src = 'http://farm3.static.flickr.com/2539/4121350181_d4b90bc4da_b.jpg'; 
 	}
-	
-	
-	draw4();
-	</script>
-</body>
-</html>
+
+
+		draw6();
+		</script>
+	</body>
+	</html>
